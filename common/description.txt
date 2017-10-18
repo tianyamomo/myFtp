@@ -1,0 +1,124 @@
+version :
+
+
+
+
+	0.1   介绍：
+	
+		规定： jdbc.properties 配置数据库的文件必须放在/config目录下。
+		jdbc.properties文件配置项规则如下：（如下是以jdbc开头做标识，）
+			#N4 UAT
+			jdbc.driverClassName=oracle.jdbc.driver.OracleDriver
+			jdbc.url=jdbc:oracle:thin:@172.25.40.49:1641:ODSUAT
+			jdbc.username=dcblinkapp
+			jdbc.password=warned11
+			jdbc.filters=stat
+			jdbc.initialSize=10
+			jdbc.minIdle=10
+			jdbc.maxActive=30
+			jdbc.maxWait=60000
+			jdbc.timeBetweenEvictionRunsMillis=300000
+			jdbc.minEvictableIdleTimeMillis=300000
+			jdbc.validationQuery=SELECT 1 FROM DUAL
+			jdbc.testWhileIdle=true
+			jdbc.testOnBorrow=true
+			jdbc.testOnReturn=true
+			jdbc.removeAbandoned=true
+			jdbc.poolPreparedStatements=false
+			jdbc.maxPoolPreparedStatementPerConnectionSize=200
+		
+			#gosuat 
+			Ins.jdbc.driverClassName=oracle.jdbc.driver.OracleDriver
+			Ins.jdbc.url=jdbc:oracle:thin:@172.25.40.57:1641:GOSUAT
+			Ins.jdbc.username=GOSAPP
+			Ins.jdbc.password=superb66
+			Ins.validationQuery=SELECT 1 FROM DUAL
+			Ins.filters=stat
+			Ins.initialSize=10
+			Ins.minIdle=10
+			Ins.maxActive=30
+			Ins.maxWait=60000
+			Ins.timeBetweenEvictionRunsMillis=300000
+			Ins.minEvictableIdleTimeMillis=300000
+			Ins.validationQuery=SELECT 1 FROM DUAL
+			Ins.testWhileIdle=true
+			Ins.testOnBorrow=true
+			Ins.testOnReturn=true
+			Ins.removeAbandoned=true
+			Ins.poolPreparedStatements=false
+			Ins.maxPoolPreparedStatementPerConnectionSize=200
+					
+		
+		DataSource ：
+			InsJdbcUtils : 先调用init方法进行初始化数据库连接池
+				void cn.gavin.common.util.dataSourceUtil.InsJdbcUtils.init(String jdbcPropertiesFileRelativePath, String startWithStr)
+				调用函数，创建数据库连接池
+				Parameters:
+					jdbcPropertiesFileRelativePath jdbc.properties文件相对于项目的路径
+					startWithStr jdbc.properties文件中配置项开头字符串，如果没有多个数据库的配置的话，可以为空
+				然后再调用getConnection获取连接
+				Connection cn.gavin.common.util.dataSourceUtil.InsJdbcUtils.getConnection()
+				获取数据库连接
+				Returns:			
+						
+			JdbcUtils : 和InsJdbcUtils类一样。
+		
+	
+		dependency : mail.jar, quartz-2.2.1.jar, ojdbc14.jar,  log4j-1.2.7.jar,  jsch-0.1.53.jar,   json-lib-2.2.2.jar ,  commons-net-2.2.jar ,dom4j-1.6.1.jar ,  druid-0.2.9.jar , slf4j-api-1.6.6.jar , slf4j-log4j12-1.6.6.jar 
+		
+		Quartz : 定时任务
+			封装了Quartz包下的Trigger-TriggerFactory,实例化Trigger对象：
+				Trigger cn.gavin.common.job.TriggerFactory.getQuartzTrigger(String triggerName, String group, Date startTime, Date endTime, int repeatCount, long interval, String conexpression) throws Exception 
+				实例化Trigger对象
+				
+				Parameters:
+				triggerName : 触发器的名称
+				group : 触发器的组别
+				startTime : job开始运行的时间
+				endTime : job停止的时间
+				repeatCount :job重复的次数
+				interval : job每两次运行中间的时间间隔
+				conexpression ：job运行的时间配置字符串
+				Returns:
+					 返回的是Trigger的实例化对象
+				Throws:
+					Exception
+	 
+	 		封装了JobDetail - JobDetailFactory,实例化JobDetail对象：
+		 		JobDetail cn.gavin.common.job.JobDetailFactory.getJobDetail(String jobName, String jobGroupName, Class<? extends Job> jobClass, Map<String, Object> paratMap) throws Exception  
+				获取JobDetail实例化对象
+				Parameters:
+				jobName ： job的名称
+				jobGroupName : job的组名
+				jobClass ：运行job的类名
+				paratMap : 运行job时需要传入的参数,所必须的参数： jobId job的唯一标识符,jobClassName job运行时需要的类名, jobClassMethod job运行时jobClassName类调用的方法 可选参数： paramValueList job运行时调用jobClassMethod 方法所需要的参数类型和参数值,如果没有这个参数,则表示调用jobClassMethod方法是没有形参的
+				Returns:
+					返回JobDetail实例化对象
+				Throws:
+					Exception
+	 	
+	 	
+			JobWork实现job接口，Scheduler.start()之后访问JobWork的execute方法。
+		
+		
+		FTP : FTP和SFTP文件传输
+			FileMove - FTP或SFTP文件传输的统一入口
+			
+			
+		email : 邮件发送
+			
+			EMAILS : email的真正发送者
+			EmailSendWorker : email发送的入口
+			
+			
+		util :
+		
+			dataSource :创建数据库连接池
+			
+			date : 日期的util类
+			
+			file  : file
+			
+			string ： string的util类
+		
+	
